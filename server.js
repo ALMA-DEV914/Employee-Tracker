@@ -200,8 +200,78 @@ function addRoles(){
             throw err
         });
 };
-
-function addEmployee(){}
+//create function to select role
+function selectRole() {
+    return connection.promise().query("SELECT * FROM role")
+        .then(res => {
+            return res[0].map(role => {
+                return {
+                    name: role.title,
+                    value: role.id
+                }
+            });
+        });
+};
+//create function to select manager
+function selectManager() {
+    return connection.promise().query("SELECT * FROM employee ")
+        .then(res => {
+            return res[0].map(manager => {
+                return {
+                    name: `${manager.first_name} ${manager.last_name}`,
+                    value: manager.id,
+                }
+            });
+        });
+    };
+// create a function that will select the employee and manager
+async function addEmployee() {
+    //declare the managers from select manager function result
+    const managers = await selectManager();
+    inquirer.prompt([
+            {
+                name: "firstname",
+                type: "input",
+                message: "Enter their first name "
+            },
+            {
+                name: "lastname",
+                type: "input",
+                message: "Enter their last name "
+            },
+            {
+                name: "role",
+                type: "list",
+                message: "What is their role? ",
+                choices: await selectRole()
+            },
+            {
+                name: "manager",
+                type: "list",
+                message: "Whats their managers name?",
+                choices: managers
+            }
+        ]).then(function (res) {
+            let roleId = res.role
+            let managerId = res.manager
+    
+            console.log({managerId});
+            connection.query("INSERT INTO Employee SET ?",
+                {
+                    first_name: res.firstname,
+                    last_name: res.lastname,
+                    manager_id: managerId,
+                    role_id: roleId
+    
+                }, 
+                function (err) {
+                    if (err) throw err
+                    console.table(res)
+                    categoryList();
+                });
+            });
+    };
+    
 function updateEmployeeRole(){}
 function deleteDepartment(){}
 function deleteEmployee(){}
