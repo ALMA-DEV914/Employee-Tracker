@@ -484,8 +484,46 @@ function updateEmployeeRole() {
             });
  };
     
-    
-function viewEmployeeByManager(){}
+ // create function to view employee by manager   
+function viewEmployeeByManager() {
+    connection.promise().query('SELECT *  FROM employee')
+        .then((res) => {
+            // make the choices from dept array
+            return res[0].map(employee => {
+                return {
+                    name: employee.first_name,
+                    value: employee.id
+                }
+            })
+        })
+        // sync all the employee that have the same manager
+        .then(async (managerList) => {
+            return inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'managerId',
+                    choices: managerList,
+                    message: 'Please select the manager you want to view employee by.'
+                }
+            ])
+        })
+        //return the table employees with the same manager id
+        .then(answer => {
+            console.log(answer);
+            return connection.promise().query('SELECT * from Employee where manager_id=?',answer.managerId);
+
+        })
+        //return table of employee
+        .then(res => {
+            console.table(res[0])
+            //call the category list function 
+            categoryList();
+        })
+
+        .catch(err => {
+            throw err
+        });
+}
 
 categoryList();
 
