@@ -1,28 +1,28 @@
-DROP TABLE IF EXISTS department;
-DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS Department;
+DROP TABLE IF EXISTS Role;
+DROP TABLE IF EXISTS Employee;
 
-CREATE TABLE department (
+CREATE TABLE Department (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30)
+    name VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE roles (
+CREATE TABLE Role (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(30),
+    title VARCHAR(30) NOT NULL,
     salary DECIMAL,
     department_id INTEGER,
     CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
 );
 
-CREATE TABLE employee (
+CREATE TABLE Employee (
     id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    first_name VARCHAR(30),
-    last_name VARCHAR(30),
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
     role_id INTEGER,
-    manager_id INTEGER NULL,
-   CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL,
-    CONSTRAINT fk_employee FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
+    manager_id INTEGER,
+   CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES Role(id) ON DELETE SET NULL,
+    CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 );
 
 
