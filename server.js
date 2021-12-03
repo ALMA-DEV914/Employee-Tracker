@@ -433,10 +433,58 @@ function updateEmployeeRole() {
             .catch(err => {
                 throw err
             });
-    
     };
+   // create function to update the manager 
+    function updateManager() {
+        connection.promise().query('SELECT *  FROM employee')
+            .then((res) => {
+                // make the choices from  dept array
+                return res[0].map(employee => {
+                    return {
+                        name: employee.first_name,
+                        value: employee.id
+                    }
+                });
+            })
+            //call the employee list and promt user which employee-manager they want to update
+            .then(async (employeeList) => {
+                return inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'employeeListId',
+                        choices: employeeList,
+                        message: 'Please select the employee you want to assign manager to:.'
+                    },
+                    {
+                        type: 'list',
+                        name: 'managerId',
+                        choices: await selectManager(),
+                        message: 'Please select the employee you want to make manager.'
+                    }
+                ]);
+            })
+            // Update the role of employee being assigned as manager
+            .then(answer => {
+                console.log(answer);
+                return connection.promise().query("UPDATE employee SET  manager_id = ? WHERE id = ?",
+                        [
+                            answer.managerId,
+                            answer.employeeListId,
+                        ],
+                    );
+            })
+            .then(res => {
+                // console.log(res);
+                console.log('Updated manager successfully')
+                runList();
+            })
     
-function updateManager(){}
+            .catch(err => {
+                throw err
+            });
+ };
+    
+    
 function viewEmployeeByManager(){}
 
 categoryList();
