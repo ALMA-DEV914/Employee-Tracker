@@ -281,6 +281,7 @@ function updateEmployeeRole() {
                     }
                 });
             })
+            //get all the employee list 
             .then(async (employeeList) => {
                 return inquirer.prompt([
                     {
@@ -297,6 +298,7 @@ function updateEmployeeRole() {
                     }
                 ]);
             })
+            //update the role of employee from user input
             .then(answer => {
                 console.log(answer);
                 return connection.promise().query("UPDATE employee SET  role_id = ? WHERE id = ?",
@@ -308,15 +310,52 @@ function updateEmployeeRole() {
                 })
             .then(res => {
                 // console.log(res);
-                console.log('Successfully updated the employee')
+                console.log('Successfully updated the employee role!')
                 categoryList();
             })
              .catch(err => {
                 throw err
             });
-    }
+    };
+    // create function to delete department by id
+    function deleteDepartment() {
+        connection.promise().query('SELECT * FROM Department')
+            .then((res) => {
+                // make the choice from department array
+                return res[0].map(dept => {
+                    return {
+                        name: dept.name,
+                        value: dept.id
+                    }
+                });
+            })
+            //promt user to select which department to delete from the lists of department
+            .then((departments) => {
+                return inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'deptId',
+                        choices: departments,
+                        message: 'Please select the department you want to delete.'
+                    }
+                ]);
+            })
+            //return the answer and show the department table of data
+            .then(answer => {
+                console.log(answer);
+                return connection.promise().query('DELETE FROM Department WHERE id = ?', answer.deptId);
+            })
+            .then(res => {
+                // console.log(res);
+                console.log('Department deleted successfully')
+                categoryList();
+            })
     
-function deleteDepartment(){}
+            .catch(err => {
+                throw err
+            });
+    
+    }
 function deleteEmployee(){}
 function deleteRole(){}
 function updateManager(){}
