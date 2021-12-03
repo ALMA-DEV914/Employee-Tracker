@@ -125,7 +125,6 @@ function viewAllEmployees(){
             //return the category lists
             categoryList();
         }
-        
     );
 };
 // create a function to add a department
@@ -146,13 +145,60 @@ function addDepartment(){
         console.log(answer);
         connection.query('INSERT INTO department SET?', {id: answer.id, name: answer.department}, (err, res) => {
             if (err) throw err;
-            console.log('Added a new department')
+            console.log('Successfully added a new department')
             categoryList();
         });
     });
 };
+// Craete function to add role
+function addRoles(){
+    // query the department data
+    connection.promise().query("SELECT * FROM Department")
+        .then((res) => {
+            // create a department array
+            return res[0].map(department => {
+                return {
+                    name: department.name,
+                    value: department.id
+                }
+            });
+        })
+        // promts the user for role information 
+        .then((departments) => {
+              return inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'roles',
+                    message: 'Please add a role:'
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'Please enter a salary:'
+                },
+                {
+                    type: 'list',
+                    name: 'depts',
+                    choices: departments,
+                    message: 'Please select your department.'
+                }
+            ]);
+        })
+        // add the answers into the role table of data
+        .then(answer => {
+            console.log(answer);
+            return connection.promise().query('INSERT INTO role SET ?', { title: answer.roles, salary: answer.salary, department_id: answer.departments});
+        })
+        .then(res => {
+            console.log('Successfully added a new role!')
+            categoryList();
 
-function addRoles(){}
+        })
+        .catch(err => {
+            throw err
+        });
+};
+
 function addEmployee(){}
 function updateEmployeeRole(){}
 function deleteDepartment(){}
