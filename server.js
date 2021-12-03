@@ -214,7 +214,7 @@ function selectRole() {
 };
 //create function to select manager
 function selectManager() {
-    return connection.promise().query("SELECT * FROM employee ")
+    return connection.promise().query("SELECT * FROM employee")
         .then(res => {
             return res[0].map(manager => {
                 return {
@@ -224,7 +224,7 @@ function selectManager() {
             });
         });
     };
-// create a function that will select the employee and manager
+// create a function that will select the manager and add employee
 async function addEmployee() {
     //declare the managers from select manager function result
     const managers = await selectManager();
@@ -262,7 +262,6 @@ async function addEmployee() {
                     last_name: res.lastname,
                     manager_id: managerId,
                     role_id: roleId
-    
                 }, 
                 function (err) {
                     if (err) throw err
@@ -271,8 +270,52 @@ async function addEmployee() {
                 });
             });
     };
+    //create function that will update the role of employee
+function updateEmployeeRole() {
+        connection.promise().query('SELECT * FROM employee')
+            .then((res) => {
+                return res[0].map(employee => {
+                    return {
+                        name: employee.first_name,
+                        value: employee.id
+                    }
+                });
+            })
+            .then(async (employeeList) => {
+                return inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'employeeListId',
+                        choices: employeeList,
+                        message: 'Please select the employee you want to update a role:.'
+                    },
+                    {
+                        type: 'list',
+                        name: 'roleId',
+                        choices: await selectRole(),
+                        message: 'Please select the role.'
+                    }
+                ]);
+            })
+            .then(answer => {
+                console.log(answer);
+                return connection.promise().query("UPDATE employee SET  role_id = ? WHERE id = ?",
+                        [
+                        answer.roleId,
+                        answer.employeeListId,
+                        ],
+                    );
+                })
+            .then(res => {
+                // console.log(res);
+                console.log('Successfully updated the employee')
+                categoryList();
+            })
+             .catch(err => {
+                throw err
+            });
+    }
     
-function updateEmployeeRole(){}
 function deleteDepartment(){}
 function deleteEmployee(){}
 function deleteRole(){}
