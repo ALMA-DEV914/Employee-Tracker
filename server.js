@@ -356,8 +356,86 @@ function updateEmployeeRole() {
             });
     
     }
-function deleteEmployee(){}
-function deleteRole(){}
+    //create function to delete employee
+    function deleteEmployee() {
+        connection.promise().query('SELECT * FROM employee')
+            .then((res) => {
+                // make the choices from dept array
+                return res[0].map(emp => {
+                    return {
+                        name: emp.first_name,
+                        value: emp.id
+                    }
+                })
+            })
+            //call the employee list as choices
+            .then((employees) => {
+                return inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'employeeId',
+                        choices: employees,
+                        message: 'Please select the employee you want to delete.'
+                    }
+                ])
+            })
+            //Update the table of employee after deletion
+            .then(answer => {
+                console.log(answer);
+                return connection.promise().query('DELETE FROM Employee WHERE id = ?', answer.employeeId);
+    
+            })
+            .then(res => {
+                // console.log(res);
+                console.log('Employee deleted successfully')
+                categoryList();
+            })
+    
+            .catch(err => {
+                throw err
+            });
+    
+    };
+// create function to delete role by title and id
+    function deleteRole() {
+        connection.promise().query('SELECT title, id FROM role')
+            .then((res) => {
+                // make the choice dept arr
+                return res[0].map(roles => {
+                    return {
+                        name: roles.title,
+                        value: roles.id
+                    }
+                });
+            })
+            //promt the role list by title and id 
+            .then((employeeRoles) => {
+                return inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'roleId',
+                        choices: employeeRoles,
+                        message: 'Please select the employee you want to delete.'
+                    }
+                ]);
+            })
+            //update the role table after deletion
+            .then(answer => {
+                console.log(answer);
+                return connection.promise().query('DELETE FROM Role WHERE id = ?', answer.roleId);
+            })
+            .then(res => {
+                // console.log(res);
+                console.log('Role deleted successfully')
+                categoryList();
+            })
+    
+            .catch(err => {
+                throw err
+            });
+    
+    };
+    
 function updateManager(){}
 function viewEmployeeByManager(){}
 
