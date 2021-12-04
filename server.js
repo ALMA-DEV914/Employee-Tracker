@@ -26,6 +26,7 @@ function categoryList() {
                 'Update employee manager',
                 'View Employee By Manager',
                 'View Employee By Department',
+                'View Department Utilization',
                 'Exit'
             ]
 
@@ -77,6 +78,9 @@ function categoryList() {
                     break;
                 case "View Employee By Department":
                     viewEmployeeByDepartment()
+                    break;
+                case "View Department Utilization":
+                    viewDepartmentUtilization()
                     break;
                 case "Exit":
                     connection.end();
@@ -568,6 +572,47 @@ function viewEmployeeByDepartment() {
             throw err
         });
 }
+
+function viewDepartmentUtilization(){
+    connection.promise().query('SELECT *  FROM department')
+        .then((res) => {
+            // make the choices from dept array
+            return res[0].map(department => {
+                return {
+                    name: department.name,
+                    value: department.id
+                }
+            })
+       })
+    // sync all the employee that have the same department
+    .then(async (departmentList) => {
+        return inquirer.prompt([
+            {
+                type: 'list',
+                name: 'departmentId',
+                choices: departmentList,
+                message: 'View each department cost.'
+            }
+        ])
+    })
+    //return the table employees with the same dept id
+    .then(answer => {
+        console.log(answer);
+        return connection.promise().query(`SELECT department_id, SUM(salary) FROM role GROUP BY department_id`, answer.departmentId);
+       })
+    //return table of employee
+    .then(res => {
+        console.table(res[0])
+        //call the category list function 
+        categoryList();
+    })
+
+    .catch(err => {
+        throw err
+    });
+}
+
+
 
 
 categoryList();
