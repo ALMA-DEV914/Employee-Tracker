@@ -2,6 +2,7 @@
 const inquirer = require('inquirer');
 // call the database of all data
 const mysql = require('mysql2');
+const cTable = require('console.table');
 //call the query for localhost PoRT connection
 const connection = require('./db/connection');
 
@@ -13,9 +14,11 @@ function categoryList() {
             message: 'What would you like to do?',
             name: 'option',
             choices: [
+        
                 'View all departments',
                 'View all Roles',
                 'View all employees',
+                'Remove column indexes',
                 'Add department',
                 'Add Roles',
                 'Add Employees',
@@ -33,6 +36,8 @@ function categoryList() {
         }).then(answer => {
          // call the function that matches the user options or selections
             switch (answer.option) {
+    
+                
                 case "View all departments":
                     viewAllDepartments();
                     break;
@@ -82,6 +87,7 @@ function categoryList() {
                 case "View Department Utilization":
                     viewDepartmentUtilization()
                     break;
+               
                 case "Exit":
                     connection.end();
                     console.log('Have a good day');
@@ -107,7 +113,7 @@ function viewAllDepartments() {
 };
 //Create function to view the table roles
 function viewAllRoles() {
-   const sql = `Select role.title as Job_title, role.salary as Salary , role.id as Role_id, dept.name as Department_name from Role role left join department as dept on dept.id = role.department_id`;
+   const sql = `Select role.title as Job_title, role.salary as Salary , role.id as Role_id, dept.name as Department_name from Role left join department as dept on dept.id = role.department_id`;
  connection.query(sql, (err, res) => {
     if (err) {
         throw err;
@@ -137,6 +143,7 @@ function viewAllEmployees(){
         }
     );
 };
+
 // create a function to add a department
 function addDepartment(){
     inquirer.prompt([
@@ -614,9 +621,6 @@ function viewDepartmentUtilization(){
         throw err
     });
 }
-
-
-
 
 categoryList();
 
