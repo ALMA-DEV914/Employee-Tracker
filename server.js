@@ -598,7 +598,10 @@ function viewDepartmentUtilization(){
     //return the table employees with the same dept id
     .then(answer => {
         console.log(answer);
-        return connection.promise().query(`SELECT department_id, SUM(salary) FROM role GROUP BY department_id`, answer.departmentId);
+        return connection.promise().query(`SELECT department.id AS Department_id, department.name As Department_name, SUM(role.salary) AS Utilization FROM employee
+        LEFT JOIN role ON employee.role_id = role.id
+        LEFT JOIN department ON role.department_id = department.id
+        GROUP BY department.id, department.name`, answer.departmentId);
        })
     //return table of employee
     .then(res => {
