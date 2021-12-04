@@ -25,6 +25,7 @@ function categoryList() {
                 'Update Employee Roles',
                 'Update employee manager',
                 'View Employee By Manager',
+                'View Employee By Department',
                 'Exit'
             ]
 
@@ -73,6 +74,9 @@ function categoryList() {
                     break;
                 case "View Employee By Manager":
                     viewEmployeeByManager()
+                    break;
+                case "View Employee By Department":
+                    viewEmployeeByDepartment()
                     break;
                 case "Exit":
                     connection.end();
@@ -524,6 +528,47 @@ function viewEmployeeByManager() {
             throw err
         });
 }
+
+// create function to view employee by department   
+function viewEmployeeByDepartment() {
+    connection.promise().query('SELECT *  FROM employee')
+        .then((res) => {
+            // make the choices from dept array
+            return res[0].map(employee => {
+                return {
+                    name: employee.first_name,
+                    value: employee.id
+                }
+            })
+        })
+        // sync all the employee that have the same department
+        .then(async (departmentList) => {
+            return inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'deptId',
+                    choices: departmentList,
+                    message: 'Please select the employee you want to view by department.'
+                }
+            ])
+        })
+        //return the table employees with the same dept id
+        .then(answer => {
+            console.log(answer);
+            return connection.promise().query(`SELECT employee.id AS Employee_id, employee.first_name AS First_name, employee.last_name AS Last_name, manager_id as Manager_id, role_id AS Department_id FROM Employee where role_id =?`, answer.deptId);
+           })
+        //return table of employee
+        .then(res => {
+            console.table(res[0])
+            //call the category list function 
+            categoryList();
+        })
+
+        .catch(err => {
+            throw err
+        });
+}
+
 
 categoryList();
 
