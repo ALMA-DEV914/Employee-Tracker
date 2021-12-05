@@ -18,11 +18,10 @@ function categoryList() {
                 'View all departments',
                 'View all Roles',
                 'View all employees',
-                'Remove column indexes',
                 'Add department',
                 'Add Roles',
                 'Add Employees',
-                'Delete Departments',
+                'Delete Department',
                 'Delete Employee',
                 'Delete Roles',
                 'Update Employee Roles',
@@ -54,25 +53,25 @@ function categoryList() {
                     addDepartment();
                     break;
 
-                case "Add Roles":
-                    addRoles();
+                case "Add Role":
+                    addRole();
                     break;
 
-                case "Add Employees":
+                case "Add Employee":
                     addEmployee();
                     break;
 
-                case "Update Employee Roles":
+                case "Update Employee Role":
                     updateEmployeeRole();
                     break;
 
-                case "Delete Departments":
+                case "Delete Department":
                     deleteDepartment();
                     break;
                 case "Delete Employee":
                     deleteEmployee();
                     break;
-                case "Delete Roles":
+                case "Delete Role":
                     deleteRole();
                     break;
                 case "Update employee manager":
@@ -128,7 +127,7 @@ function viewAllRoles() {
 // Create function to view table of employees
 function viewAllEmployees(){
     //Assign the next employee as the manager of the current employee
-    const sql = `Select employee.id as Employee_id,concat(employee.first_name," ",employee.last_name) as Employee_fullName, role.title as Job_tittle, role.salary as Salary,dept.name as Department_Name,concat(employee2.first_name,"  ",employee2.last_name) as Manager_name from employee_tracker.employee as employee left join employee_tracker.employee as employee2 on employee2.id=employee.manager_id left join employee_tracker.Role as role on employee.role_id=role.id left join employee_tracker.department as dept on dept.id = role.department_id`;
+    const sql = `Select employee.id as Employee_id,employee.first_name as First_name, employee.last_name as Last_name, role.title as Job_tittle, role.salary as Salary,dept.name as Department_Name,concat(employee2.first_name,"  ",employee2.last_name) as Manager_name from employee_tracker.employee as employee left join employee_tracker.employee as employee2 on employee2.id=employee.manager_id left join employee_tracker.Role as role on employee.role_id=role.id left join employee_tracker.department as dept on dept.id = role.department_id`;
     
     connection.query(
         sql, 
@@ -168,7 +167,7 @@ function addDepartment(){
     });
 };
 // Craete function to add role
-function addRoles(){
+function addRole(){
     // query the department data
     connection.promise().query("SELECT * FROM Department")
         .then((res) => {
