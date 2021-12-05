@@ -12,7 +12,7 @@ And when choosing to 'view all departments', then presented with a formatted tab
 
 ## WALKTHROUGH VIDEO OF APPLICATION FUNCTIONALITY
 
-[Please visit the link for demonstration]()
+[Please visit the link for demonstration](https://www.youtube.com/watch?v=GbG3Z9zF2gk)
 
 ## USAGE
     npm init -y

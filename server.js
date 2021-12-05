@@ -7,7 +7,7 @@ const cTable = require('console.table');
 const connection = require('./db/connection');
 
 // Create function for promts of category list
-function categoryList() {
+function categoryList() { 
     inquirer.prompt(
         {
             type: 'list',
@@ -491,7 +491,7 @@ function updateEmployeeRole() {
             .then(res => {
                 // console.log(res);
                 console.log('Updated manager successfully')
-                runList();
+                categoryList();
             })
     
             .catch(err => {
