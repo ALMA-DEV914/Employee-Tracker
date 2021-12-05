@@ -30,7 +30,8 @@ When you want to add department it will be added to the table department as show
 ![NODE server step 2](assets/images/node2.png)
 When you want to add role it will be added in the table role and the same on other commands prompts.
 ![NODE server step 3](assets/images/node3.png)
-
+The table format after you require the npm package console.table.
+<img width="1786" alt="Screen Shot 2021-12-05 at 3 52 45 PM" src="https://user-images.githubusercontent.com/65073138/144769293-60673181-bee1-4da8-8a59-3df99f4bfbb4.png">
 
 ### QUESTIONS
 Please email me at: <a href="mailto:aungonalna58@gamil.com"> aungonalna58@gmail.com</a>
