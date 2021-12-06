@@ -14,6 +14,11 @@ And when choosing to 'view all departments', then presented with a formatted tab
 
 [Please visit the link for demonstration](https://www.youtube.com/watch?v=GbG3Z9zF2gk)
 
+## BUILT WITH
+* NODE.JS PACKAGE (express, inquirer and console.table)
+* MYSQL2 - Structured Query Library/Database
+* RUN in CLI-Command Line Interface
+
 ## USAGE
     npm init -y
     npm i express mysql2
